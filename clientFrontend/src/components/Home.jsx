@@ -88,7 +88,8 @@ function Home() {
         className="pageSection w-full flex flex-col justify-center items-center text-5xl/[100%] font-serif"
       >
         <p className="text-[80%] my-[2%] font-bold">
-          Choose an option below to get started:
+          Choose an option below to get started (You will be asked to sign in to
+          Google):
         </p>
 
         <div className="w-[70%] h-[65%] my-[3%] flex flex-col items-center">
