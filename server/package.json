@@ -1,0 +1,36 @@
+{
+  "name": "csv-to-slides-web-app",
+  "version": "1.0.0",
+  "description": "This repository leverages my custom-made Google Slides MCP Server to create a full-stack web application that creates Google Slides Presentations based on CSV data.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./build/server.js",
+    "build": "tsc && chmod 755 build/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gabrielo-Ram/CSV-to-Slides-Web-app.git"
+  },
+  "keywords": [],
+  "author": "Gabe Ramirez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gabrielo-Ram/CSV-to-Slides-Web-app/issues"
+  },
+  "homepage": "https://github.com/Gabrielo-Ram/CSV-to-Slides-Web-app#readme",
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.11",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@gabrielo-ram/gabesgoogleslidesmcp": "^1.1.3",
+    "cors": "^2.8.5",
+    "path": "^0.12.7",
+    "pdfjs-dist": "^5.3.93"
+  }
+}
