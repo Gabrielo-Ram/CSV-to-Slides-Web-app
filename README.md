@@ -28,6 +28,7 @@ CSV-to-Slides-Web-app/
 1. Install dependencies
 
 From the project root, run:
+
 ```
 cd server && npm install
 cd ../clientFrontend && npm install
@@ -42,13 +43,19 @@ cd ../GoogleSlidesMCP && npm install
 3. Build and Run
 
 **Backend:**
-`cd server
+
+```
+cd server
 npm run build
 npm start `
+```
 
 **Frontend:**
-`cd clientFrontend
-npm run dev'
+
+```
+cd clientFrontend
+npm run dev
+```
 
 4. Usage
 
