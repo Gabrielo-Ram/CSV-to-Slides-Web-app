@@ -41,18 +41,18 @@ cd ../GoogleSlidesMCP && npm install
 
 3. Build and Run
 
-**Backend: **
+**Backend:**
 `cd server
 npm run build
 npm start `
 
-** Frontend: **
+**Frontend:**
 `cd clientFrontend
 npm run dev'
 
 4. Usage
 
-- Visit `http://localhost:5173`to use the app.
+- Visit `http://localhost:5173` to use the app.
 - Authenticate with Google, upload your CSV or PDF, and generate a pitch deck.
 
 ## License
