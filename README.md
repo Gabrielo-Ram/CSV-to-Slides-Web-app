@@ -13,23 +13,27 @@ A full-stack web application that generates Google Slides presentations from CSV
 
 ## Project Structure
 
-`CSV-to-Slides-Web-app/
+```
+CSV-to-Slides-Web-app/
 │
 ├── clientFrontend/      # React frontend (Vite, TailwindCSS)
 ├── server/              # Express backend (TypeScript)
 ├── MCPClient/           # MCP client logic (TypeScript)
 ├── GoogleSlidesMCP/     # Custom MCP server (Google Slides logic)
-└── README.md`
+└── README.md
+```
 
 ## Getting Started
 
 1. Install dependencies
 
 From the project root, run:
-`cd server && npm install
+```
+cd server && npm install
 cd ../clientFrontend && npm install
 cd ../MCPClient && npm install
-cd ../GoogleSlidesMCP && npm install`
+cd ../GoogleSlidesMCP && npm install
+```
 
 2. Environment Variables
 
@@ -37,18 +41,18 @@ cd ../GoogleSlidesMCP && npm install`
 
 3. Build and Run
 
-**Backend: **
+**Backend:**
 `cd server
 npm run build
 npm start `
 
-** Frontend: **
+**Frontend:**
 `cd clientFrontend
 npm run dev'
 
 4. Usage
 
-- Visit `http://localhost:5173`to use the app.
+- Visit `http://localhost:5173` to use the app.
 - Authenticate with Google, upload your CSV or PDF, and generate a pitch deck.
 
 ## License
