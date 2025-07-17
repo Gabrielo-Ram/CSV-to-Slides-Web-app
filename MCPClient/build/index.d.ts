@@ -12,10 +12,9 @@ export declare class MCPClient {
      */
     processQuery(query: string): Promise<string | undefined>;
     /**
-     * This function creates a CLI interface that allows the user to
+     * [Deprecated] This function creates a CLI interface that allows the user to
      * keep a conversing with the LLM.
      */
-    chatLoop(): Promise<void>;
     /**
      * Closes all client sessions
      */
@@ -23,7 +22,7 @@ export declare class MCPClient {
 }
 /**
  * Main function that starts the client. We export this function to our Express
- * backend to use the functions in our MCP Client class. This function
- * returns an instance of the MCP Client.
+ * backend to use the functions in our MCP Client class. Returns an instance
+ * of the MCP Client.
  */
 export declare function connectToMCP(): Promise<MCPClient>;

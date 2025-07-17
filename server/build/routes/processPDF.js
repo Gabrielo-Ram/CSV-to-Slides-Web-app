@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
             extractedText += strings + "\n";
         }
         //Send to LLM
-        const reply = await client.processQuery(`Here is a PDF file. This is the text content extracted from the file that you will pass into extract-company data.\n\n${extractedText}`);
+        const reply = await client.processQuery(`Here is a PDF file. Please use this information as context to create your presentation wireframe: \n\n${extractedText}`);
         res.json({ reply });
     }
     catch (error) {

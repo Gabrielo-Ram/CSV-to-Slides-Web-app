@@ -1,14 +1,17 @@
 import "../index.css";
 import Backdrop from "./Backdrop";
 import QuestionNavigator from "./QuestionNavigator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { IoIosExit } from "react-icons/io";
 
 function IntelForm() {
   const navigate = useNavigate();
 
   const [questionNumber, setQuestionNumber] = useState(0);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  const BACKEND_URL = "http://localhost:3001";
   //Save data into fields when the user hits the submit button.
   const [name, setName] = useState("");
   const [team, setTeam] = useState("");
@@ -35,6 +38,32 @@ function IntelForm() {
     navigate("/chat", { state: responses });
   };
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/auth/user`, {
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          setIsAuthenticated(false);
+          return;
+        }
+
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
+
+    if (!isAuthenticated) {
+      navigate("/");
+    }
+  });
+
   return (
     <div className="h-screen w-screen flex justify-center">
       <Backdrop />
@@ -42,14 +71,21 @@ function IntelForm() {
         id="form-container"
         className="w-1/2 h-[90%] my-[3%] bg-gray-700 shadow-2xl rounded-xl bg-radial from-gray-600 to-gray-700"
       >
-        <h1 className="w-full text-center text-5xl font-bold font-serif my-[5%]">
+        <div
+          id="exit"
+          className="h-[8%] w-[10%] ml-[88%] mt-[1%]"
+          onClick={() => navigate("/")}
+        >
+          <IoIosExit className="size-full hover:cursor-pointer hover:text-blue-500 transition-all duration-200" />
+        </div>
+        <h1 className="w-full text-center text-5xl font-bold font-serif mb-[5%]">
           Pitch Deck Template
         </h1>
         <QuestionNavigator
           numberOfQuestions={7}
           currentQuestion={questionNumber}
         />
-        <div className="w-full text-center text-xl font-serif my-[5%] px-[2%]">
+        <div className="w-full text-center text-xl font-serif mb-[5%] px-[2%]">
           {questionNumber === 0 && (
             <>
               <p className="w-full lg:text-[120%] text-[100%] text-center font-serif my-[5%] px-[4%] ">
@@ -100,7 +136,7 @@ function IntelForm() {
                   rows={2}
                 />
               </div>
-              <div className="flex justify-center items-center my-[4%]">
+              <div className="flex justify-center items-center mt-[4%] mb-[2%]">
                 <span className="font-bold w-[30%]">What's your story?</span>
                 <textarea
                   className="w-[60%] ml-[3%] px-4 py-3 rounded border border-gray-400 focus:outline-none focus:ring-2 bg-gray-800 text-white text-[90%]"

@@ -3,10 +3,40 @@ import Chat from "./Chat";
 import Navbar from "./Navbar";
 import Backdrop from "./Backdrop";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function AIGui() {
   //Retrieve responses from Form.
+  const navigate = useNavigate();
   const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/auth/user`, {
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          setIsAuthenticated(false);
+          return;
+        }
+
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
+
+    if (!isAuthenticated) {
+      navigate("/");
+    }
+  });
 
   const { type, name, team, story, problem, solution, market, traction, ask } =
     location.state || {};

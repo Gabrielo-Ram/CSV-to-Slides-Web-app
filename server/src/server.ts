@@ -1,45 +1,75 @@
-/**
- * ./server.js
- *
- * *The entrypoint for our whole application.* This express backend connects
- * all parts of our application together. This server does the following:
- *  - Serves React static pages at two endpoints (UX/UI)
- *  - Initializes and handles user+MCP interaction at /chat/processQuery
- */
-
-import { Request, Response } from "express";
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import { connectToMCP, MCPClient } from "../../MCPClient/build/index.js";
+import session from "express-session";
+import passport from "passport";
+import "./passport.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+}
+
+const frontendURL = process.env.FRONTEND_URL;
+if (!frontendURL) {
+  throw new Error("Could not retrieve frontendURL from environment");
+}
+
 const port = 3001;
+dotenv.config();
 const app = express();
 
 //A reference to our MCP Client
 export let mcpClient: MCPClient | null = null;
 
-app.use(cors());
+//CORS config to enable frontend
+app.use(
+  cors({
+    origin: frontendURL,
+    credentials: true,
+  })
+);
+
+//Express-session config
+app.use(
+  session({
+    name: "connect.sid",
+    secret: process.env.SESSION_SECRET || "my-secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production" || false, // true on Render
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 60 * 1,
+    },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 //Starts the MCP Server AND THEN engages routes
 const startServer = async () => {
   try {
     //If an MCP client doesn't exist, initialize a new one
     if (!mcpClient) {
-      console.log("New MCP Client engaged...");
       mcpClient = await connectToMCP();
 
-      //Set up routes now that MCP Server was engaged
+      //Set up routes now that MCP Server is engaged
       const processCSVRouter = (await import("./routes/processCSV.js")).default;
       const processQueryRouter = (await import("./routes/processQuery.js"))
         .default;
       const processPDFRouter = (await import("./routes/processPDF.js")).default;
+      const authRouter = (await import("./routes/authRouter.js")).default;
+      const sendTokenRouter = (await import("./routes/sendToken.js")).default;
 
-      // Endpoint middleware that sends PDF context to MCP Client
+      //Mount routes to proper endpoints
       app.use(
         "/processPDF",
         express.raw({ type: "application/pdf", limit: "50mb" }),
@@ -48,27 +78,28 @@ const startServer = async () => {
 
       app.use(express.json());
 
-      // Endpoint middleware that engages the MCP client and handles user queries
       app.use("/processQuery", processQueryRouter);
-
-      // Endpoint middleware that sends CSV context to MCP Client
       app.use("/processCSV", processCSVRouter);
+      app.use("/sendToken", sendTokenRouter);
+      app.use("/", authRouter);
 
       //Starts server at port
       app.listen(port, () => {
-        console.log(`\nServer started at port: http://localhost:${port}`);
+        console.error(`\nServer started at port: ${port}`);
       });
     }
   } catch (error) {
     console.error("Failed to start MCP Client", error);
   }
 };
+
 startServer();
 
-//Serves React static files from React build directory
-app.use(express.static(path.join(__dirname, "../../clientFrontend/dist")));
-
-//Serves React frontend to root endpoint
-app.get("/", (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, "../../clientFrontend/dist/index.html"));
+//Checks if the user is signed-in or not.
+app.get("/api/auth/user", (req, res) => {
+  if (req.isAuthenticated() && req.user) {
+    res.sendStatus(200).send("User authenticated!");
+  } else {
+    res.status(401).send("Not authenticated");
+  }
 });

@@ -12,14 +12,34 @@ function Chat({ systemPrompt }) {
   const [userQuery, setUserQuery] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  //Upon first render of this component, send the system prompt to the MCP and return response
+  const BACKEND_URL = "http://localhost:3001";
+
+  //Guard flag for useEffect()
+  const hasFired = useRef(false);
+
+  //Upon first render of this component, send the user's access token and the system prompt to the MCP and return response
   useEffect(() => {
+    //Ensures we only send this information ONCE
+    if (hasFired.current) return;
+    hasFired.current = true;
+
     async function sendSystemPrompt() {
       setLoading(true);
       try {
+        //Calls a route that prompts the Express backend to send the access token in a message to the MCP Client
+        const sendToken = await fetch(`${BACKEND_URL}/sendToken`, {
+          method: "GET",
+          credentials: "include",
+        }).catch((error) => {
+          throw new Error(
+            `Failure when calling /sendToken endpoint: \n${error.message}`
+          );
+        });
+
         //Calls MCP endpoint
-        const response = await fetch("/processQuery", {
+        const response = await fetch(`${BACKEND_URL}/processQuery`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -69,7 +89,8 @@ function Chat({ systemPrompt }) {
   const submitQueryToMCP = async (query) => {
     try {
       //Calls our MCP endpoint
-      const response = await fetch("/processQuery", {
+      //TODO: Replace URL in fetch with backend URL
+      const response = await fetch(`${BACKEND_URL}/processQuery`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +129,8 @@ function Chat({ systemPrompt }) {
         if (fileType === "text/csv") {
           const csvText = event.target?.result;
           if (typeof csvText === "string") {
-            const res = await fetch("/processCSV", {
+            //TODO: Replace URL in fetch with backend URL
+            const res = await fetch(`${BACKEND_URL}/processCSV`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ csv: csvText }),
@@ -137,7 +159,8 @@ function Chat({ systemPrompt }) {
         } else if (fileType === "application/pdf") {
           const pdfArrayBuffer = event.target?.result;
 
-          const res = await fetch("/processPDF", {
+          //TODO: Replace URL in fetch with backend URL
+          const res = await fetch(`${BACKEND_URL}/processPDF`, {
             method: "POST",
             body: pdfArrayBuffer,
             headers: {
@@ -201,7 +224,7 @@ function Chat({ systemPrompt }) {
           if (index % 2 !== 0) {
             return (
               <p
-                key={index}
+                key={`user-${index}`}
                 className="text-lg rounded-xl self-end max-w-1/2 bg-gray-600 px-[2%] py-[1%] my-[1%] break-words"
               >
                 {message}
@@ -211,19 +234,19 @@ function Chat({ systemPrompt }) {
             return (
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
-                className="markdownElement"
+                key={`bot-${index}`}
                 components={{
                   h1: ({ node, ...props }) => (
                     <h1 className="text-3xl font-bold mb-4" {...props} />
                   ),
                   h2: ({ node, ...props }) => (
                     <h2
-                      className="text-2xl font-semibold mt-6 mb-2"
+                      className="text-2xl font-semibold mt-8 mb-2"
                       {...props}
                     />
                   ),
                   h3: ({ node, ...props }) => (
-                    <h3 className="text-2xl font-bold mt-4 mb-1" {...props} />
+                    <h3 className="text-2xl font-bold mt-6 mb-1" {...props} />
                   ),
                   p: ({ node, ...props }) => (
                     <p
@@ -274,6 +297,7 @@ function Chat({ systemPrompt }) {
             <input
               id="uploadCSV"
               type="file"
+              title="Upload CSV or PDF"
               className="hidden"
               accept=".csv, .pdf"
               onChange={(e) => uploadFile(e)}

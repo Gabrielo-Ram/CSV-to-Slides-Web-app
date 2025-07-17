@@ -8,7 +8,10 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+}
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 if (!GEMINI_API_KEY) {
@@ -23,6 +26,7 @@ export class MCPClient {
   private messages: Content[] = [];
 
   constructor() {
+    //Creates instance of LLM: Gemini
     this.ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
   }
 
@@ -71,9 +75,6 @@ export class MCPClient {
    */
   async processQuery(query: string) {
     try {
-      //TODO: Add a system prompt that enhances the user's query.
-      const prop = "";
-
       //Push user's message to chat history
       this.messages.push({
         role: "user",
@@ -124,34 +125,33 @@ export class MCPClient {
   }
 
   /**
-   * This function creates a CLI interface that allows the user to
+   * [Deprecated] This function creates a CLI interface that allows the user to
    * keep a conversing with the LLM.
    */
-  async chatLoop() {
-    //Initiates std chat connection
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
+  // async chatLoop() {
+  //   //Initiates std chat connection
+  //   const rl = readline.createInterface({
+  //     input: process.stdin,
+  //     output: process.stdout,
+  //   });
 
-    //Create the CLI interface
-    try {
-      console.log("MCP Client Started!");
-      console.log("Type your queries or 'quit' to exit.");
+  //   //Create the CLI interface
+  //   try {
+  //     console.log("MCP Client Started!");
 
-      while (true) {
-        const message = await rl.question("\nQuery: ");
-        if (message.toLowerCase() === "quit") {
-          break;
-        }
+  //     while (true) {
+  //       const message = await rl.question("\nQuery: ");
+  //       if (message.toLowerCase() === "quit") {
+  //         break;
+  //       }
 
-        const response = await this.processQuery(message);
-        console.log("\n" + response);
-      }
-    } finally {
-      rl.close();
-    }
-  }
+  //       const response = await this.processQuery(message);
+  //       console.log("\n" + response);
+  //     }
+  //   } finally {
+  //     rl.close();
+  //   }
+  // }
 
   /**
    * Closes all client sessions
@@ -165,24 +165,19 @@ export class MCPClient {
 
 /**
  * Main function that starts the client. We export this function to our Express
- * backend to use the functions in our MCP Client class. This function
- * returns an instance of the MCP Client.
+ * backend to use the functions in our MCP Client class. Returns an instance
+ * of the MCP Client.
  */
 export async function connectToMCP() {
-  //TESTING: Process the script arguments.
-  // if (process.argv.length < 2) {
-  //   console.log("\nUsage: node ./build/index.js");
-  //   return;
-  // }
-
+  //Path to Google Slides MPC Server entry file
   const slidesMCPPath = path.resolve(
     __dirname,
-    "../node_modules/@gabrielo-ram/gabesgoogleslidesmcp/build/index.js"
+    "../../GoogleSlidesMCP/build/index.js"
   );
 
   //This client setup allows for multiple MCP Servers to connect to it at once.
-  //const slidesMCPPath = process.argv[2];
   //For now, we are only connecting to the Google Slides MCP Server.
+  //const slidesMCPPath = process.argv[2];
   //const notionMCPPath = process.argv[3];
 
   //Initiate the MCP Client(s)
@@ -196,9 +191,7 @@ export async function connectToMCP() {
     //Returns an instance of the MCP Client
     return mcpClient;
   } catch (error) {
-    console.error(
-      `\nFatal error in MCPClient connectToMCP(). Did you run 'npm install'?: \n${error}`
-    );
+    console.error(`\nFatal error in MCPClient connectToMCP(): \n${error}`);
   }
 
   await mcpClient.cleanup();

@@ -19,14 +19,13 @@ router.post("/", async (req, res) => {
             });
             return;
         }
-        //Retrieve the message from the request body. When we fetch with a POST method
-        //to this endpoint, we must pass in a JSON object with a 'message' property.
+        //Retrieve the message from the request body
         const { message } = req.body;
         if (!message || typeof message !== "string") {
             res.status(400).json({ error: "Missing or invalid message " });
             return;
         }
-        //MCP Client processes the user's query and returns the LLM's response.
+        //Send message to LLM and return LLM response
         const reply = await client.processQuery(message);
         res.json({ reply });
     }
