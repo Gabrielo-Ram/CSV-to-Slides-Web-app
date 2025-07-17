@@ -31,7 +31,6 @@ From the project root, run:
 
 ```
 cd server && npm install
-cd ../clientFrontend && npm install
 cd ../MCPClient && npm install
 cd ../GoogleSlidesMCP && npm install
 ```
@@ -48,13 +47,6 @@ cd ../GoogleSlidesMCP && npm install
 cd server
 npm run build
 npm start `
-```
-
-**Frontend:**
-
-```
-cd clientFrontend
-npm run dev
 ```
 
 4. Usage
