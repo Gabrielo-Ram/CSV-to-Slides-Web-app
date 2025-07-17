@@ -36,10 +36,14 @@ router.get("/auth/google/callback", (req, res, next) => {
       return res.redirect("/login?error=oauth");
     }
     if (!user) {
+      console.error("User is undefined");
       return res.redirect("/login?error=no-user");
     }
     req.logIn(user, (err) => {
-      if (err) return res.redirect(`${frontendURL}?login=failed`);
+      if (err) {
+        console.error("First error in req.logIn: ", err);
+        return res.redirect(`${frontendURL}`);
+      }
 
       //Store Access Token in session
       const accessToken = info?.accessToken || user?.accessToken;

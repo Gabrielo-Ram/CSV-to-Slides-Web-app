@@ -17,7 +17,6 @@ if (!frontendURL) {
     throw new Error("Could not retrieve frontendURL from environment");
 }
 const port = 3001;
-dotenv.config();
 const app = express();
 //A reference to our MCP Client
 export let mcpClient = null;
@@ -74,11 +73,17 @@ const startServer = async () => {
 startServer();
 //Checks if the user is signed-in or not.
 app.get("/api/auth/user", (req, res) => {
-    if (req.isAuthenticated() && req.user) {
-        res.sendStatus(200).send("User authenticated!");
+    try {
+        if (req.isAuthenticated() && req.user) {
+            res.status(200).send("User authenticated!");
+        }
+        else {
+            res.status(401).send("Not authenticated");
+        }
     }
-    else {
-        res.status(401).send("Not authenticated");
+    catch (error) {
+        console.error("Error in /api/auth/user:", error);
+        res.status(401).send("Fatal error at /api/auth/user");
     }
 });
 //TESTING:
