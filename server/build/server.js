@@ -81,3 +81,10 @@ app.get("/api/auth/user", (req, res) => {
         res.status(401).send("Not authenticated");
     }
 });
+//TESTING:
+app.get("/api/session", (req, res) => {
+    if (!req.session) {
+        return res.send("req.session is empty or null");
+    }
+    res.json(req.session);
+});

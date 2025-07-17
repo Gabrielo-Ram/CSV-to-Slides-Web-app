@@ -46,11 +46,13 @@ router.get("/auth/google/callback", (req, res, next) => {
       if (accessToken) {
         // @ts-ignore
         req.session.accessToken = accessToken;
+
+        console.error("Access Token added to session");
       } else {
         console.error("No access token found to store");
       }
 
-      return res.redirect(`${frontendURL}?login=success`);
+      return res.redirect(`${frontendURL}`);
     });
   })(req, res, next);
 });

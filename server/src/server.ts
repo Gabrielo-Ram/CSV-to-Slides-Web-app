@@ -1,4 +1,4 @@
-import express from "express";
+import express, { application } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
@@ -102,4 +102,12 @@ app.get("/api/auth/user", (req, res) => {
   } else {
     res.status(401).send("Not authenticated");
   }
+});
+
+//TESTING:
+app.get("/api/session", (req: any, res: any) => {
+  if (!req.session) {
+    return res.send("req.session is empty or null");
+  }
+  res.json(req.session);
 });
