@@ -172,7 +172,7 @@ export async function connectToMCP() {
   //Path to Google Slides MPC Server entry file
   const slidesMCPPath = path.resolve(
     __dirname,
-    "../../GoogleSlidesMCP/build/index.js"
+    "../../GoogleSlidesMCPServer/build/index.js"
   );
 
   //This client setup allows for multiple MCP Servers to connect to it at once.

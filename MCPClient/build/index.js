@@ -143,7 +143,7 @@ export class MCPClient {
  */
 export async function connectToMCP() {
     //Path to Google Slides MPC Server entry file
-    const slidesMCPPath = path.resolve(__dirname, "../../GoogleSlidesMCP/build/index.js");
+    const slidesMCPPath = path.resolve(__dirname, "../../GoogleSlidesMCPServer/build/index.js");
     //This client setup allows for multiple MCP Servers to connect to it at once.
     //For now, we are only connecting to the Google Slides MCP Server.
     //const slidesMCPPath = process.argv[2];
