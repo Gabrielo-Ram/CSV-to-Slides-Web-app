@@ -1,7 +1,7 @@
 import express from "express";
 import { mcpClient } from "../server.js";
 // @ts-ignore
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+import { pdf } from "pdf-parse";
 //MCP Client instance
 const client = mcpClient || null;
 const router = express.Router();
@@ -22,19 +22,9 @@ router.post("/", async (req, res) => {
                 error: "Missing or invalid PDF buffer",
             });
         }
-        //Parse PDF
-        const loadingTask = pdfjsLib.getDocument({
-            data: new Uint8Array(pdfBuffer),
-        });
-        const pdfDoc = await loadingTask.promise;
-        let extractedText = "";
-        //Iterate through each page in the PDF and extract the text
-        for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
-            const page = await pdfDoc.getPage(pageNum);
-            const content = await page.getTextContent();
-            const strings = content.items.map((item) => item.str).join(" ");
-            extractedText += strings + "\n";
-        }
+        //Extract text from PDF
+        const data = await pdf(pdfBuffer);
+        const extractedText = data.text;
         //Send to LLM
         const reply = await client.processQuery(`Here is a PDF file. Please use this information as context to create your presentation wireframe: \n\n${extractedText}`);
         res.json({ reply });
