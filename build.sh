@@ -1,14 +1,15 @@
-# build.sh
 #!/bin/bash
-set -e  # Exit immediately if any command fails
+set -e
 
-echo "📦 Installing server dependencies..."
-cd server && npm install && npm run build
+echo "📦 Building all workspaces..."
 
-echo "📦 Installing MCPClient dependencies..."
-cd ../MCPClient && npm install && npm run build
+for dir in server MCPClient GoogleSlidesMCPServer
+do
+  echo "➡️  Entering $dir..."
+  cd $dir
+  npm ci --omit=optional  # or npm ci --omit=optional
+  npm run build
+  cd ..
+done
 
-echo "📦 Installing GoogleSlidesMCP dependencies..."
-cd ../GoogleSlidesMCPServer && npm install && npm run build
-
-echo "✅ All installs complete."
+echo "✅ All builds complete."

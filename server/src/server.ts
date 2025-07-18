@@ -95,7 +95,7 @@ const startServer = async () => {
 startServer();
 
 //Checks if the user is signed-in or not.
-app.get("/api/auth/user", (req, res) => {
+app.get("/api/auth/user", (req: any, res: any) => {
   try {
     //TESTING
     //console.log("User: ", req.user);
