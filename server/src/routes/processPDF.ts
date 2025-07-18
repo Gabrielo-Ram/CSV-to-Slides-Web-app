@@ -1,7 +1,7 @@
 import express from "express";
 import { mcpClient } from "../server.js";
 // @ts-ignore
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.node.mjs";
 
 //MCP Client instance
 const client = mcpClient || null;
