@@ -42,7 +42,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production" || false, // true on Render
+      secure: process.env.NODE_ENV === "production" || false,
       httpOnly: true,
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 1,
@@ -76,7 +76,6 @@ const startServer = async () => {
       );
 
       app.use(express.json());
-
       app.use("/processQuery", processQueryRouter);
       app.use("/processCSV", processCSVRouter);
       app.use("/sendToken", sendTokenRouter);

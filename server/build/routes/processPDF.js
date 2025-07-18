@@ -1,7 +1,7 @@
 import express from "express";
 import { mcpClient } from "../server.js";
 // @ts-ignore
-import { pdf } from "pdf-parse";
+import pdf from "pdf-parse";
 //MCP Client instance
 const client = mcpClient || null;
 const router = express.Router();
