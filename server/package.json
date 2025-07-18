@@ -30,7 +30,6 @@
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.16",
     "patch-package": "^8.0.0",
-    "postinstall-postinstall": "^2.1.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
   },
