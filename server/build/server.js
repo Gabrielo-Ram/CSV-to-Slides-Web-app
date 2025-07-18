@@ -74,6 +74,8 @@ startServer();
 //Checks if the user is signed-in or not.
 app.get("/api/auth/user", (req, res) => {
     try {
+        //TESTING
+        //console.log("User: ", req.user);
         if (req.isAuthenticated() && req.user) {
             res.status(200).send("User authenticated!");
         }

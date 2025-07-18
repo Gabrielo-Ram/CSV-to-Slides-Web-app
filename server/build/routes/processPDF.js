@@ -9,6 +9,7 @@ router.post("/", async (req, res) => {
     try {
         //Validate MCP Client
         if (!client) {
+            console.error("Failed passing MCP Client to PDF router");
             return res.status(400).json({
                 error: "Failed passing MCP Client instance to processPDF router.",
             });
@@ -16,6 +17,7 @@ router.post("/", async (req, res) => {
         //Check that request has a buffer
         const pdfBuffer = req.body;
         if (!pdfBuffer || !Buffer.isBuffer(pdfBuffer)) {
+            console.error("Missing or invalid PDF buffer");
             return res.status(400).json({
                 error: "Missing or invalid PDF buffer",
             });
@@ -38,7 +40,7 @@ router.post("/", async (req, res) => {
         res.json({ reply });
     }
     catch (error) {
-        console.error("error processing PDF to LLM: ", error);
+        console.error("Error processing PDF to LLM: ", error);
         res.status(500).json({
             error: "Failed to process PDF to LLM",
         });

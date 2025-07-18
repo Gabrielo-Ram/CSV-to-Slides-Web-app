@@ -41,7 +41,7 @@ router.get("/auth/google/callback", (req, res, next) => {
     }
     req.logIn(user, (err) => {
       if (err) {
-        console.error("First error in req.logIn: ", err);
+        console.error("Error in req.logIn: ", err);
         return res.redirect(`${frontendURL}`);
       }
 
@@ -51,7 +51,7 @@ router.get("/auth/google/callback", (req, res, next) => {
         // @ts-ignore
         req.session.accessToken = accessToken;
 
-        console.error("Access Token added to session");
+        console.error("Authenticated New User");
       } else {
         console.error("No access token found to store");
       }
