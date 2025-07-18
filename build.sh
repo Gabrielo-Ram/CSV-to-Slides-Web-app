@@ -7,7 +7,7 @@ for dir in server MCPClient GoogleSlidesMCPServer
 do
   echo "➡️  Entering $dir..."
   cd $dir
-  npm ci --omit=optional  # or npm ci --omit=optional
+  npm install --omit=optional  # or npm ci --omit=optional
   npm run build
   cd ..
 done
