@@ -44,7 +44,7 @@ app.use(
     cookie: {
       secure: process.env.NODE_ENV === "production" || false,
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
       maxAge: 1000 * 60 * 60 * 1,
     },
   })
@@ -102,6 +102,7 @@ app.get("/api/auth/user", (req: any, res: any) => {
     if (req.isAuthenticated() && req.user) {
       res.status(200).send("User authenticated!");
     } else {
+      console.error("User not authenticated");
       res.status(401).send("Not authenticated");
     }
   } catch (error) {

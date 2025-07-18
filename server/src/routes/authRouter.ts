@@ -51,7 +51,7 @@ router.get("/auth/google/callback", (req, res, next) => {
         // @ts-ignore
         req.session.accessToken = accessToken;
 
-        console.error("Authenticated New User");
+        console.error("Authenticated New User: ");
       } else {
         console.error("No access token found to store");
       }
