@@ -270,38 +270,38 @@ server.tool(
   }
 );
 
-server.tool(
-  "set-access-token",
-  "This tool stores the user's access Token for future use",
-  {
-    accessToken: z
-      .string()
-      .describe("The user's access Token for Google oAuth"),
-  },
-  async ({ accessToken }) => {
-    if (!accessToken || accessToken.length < 1) {
-      return {
-        content: [
-          {
-            type: "text",
-            text: "Access Token is empty or invalid. Please pass in a valid access Token",
-          },
-        ],
-      };
-    }
+// server.tool(
+//   "set-access-token",
+//   "This tool stores the user's access Token for future use",
+//   {
+//     accessToken: z
+//       .string()
+//       .describe("The user's access Token for Google oAuth"),
+//   },
+//   async ({ accessToken }) => {
+//     if (!accessToken || accessToken.length < 1) {
+//       return {
+//         content: [
+//           {
+//             type: "text",
+//             text: "Access Token is empty or invalid. Please pass in a valid access Token",
+//           },
+//         ],
+//       };
+//     }
 
-    usersAccessToken = accessToken;
+//     usersAccessToken = accessToken;
 
-    return {
-      content: [
-        {
-          type: "text",
-          text: "Succesfully retrieved the user's access Token",
-        },
-      ],
-    };
-  }
-);
+//     return {
+//       content: [
+//         {
+//           type: "text",
+//           text: "Succesfully retrieved the user's access Token",
+//         },
+//       ],
+//     };
+//   }
+// );
 
 //Main function used to connect to an MCP Client.
 export async function engageServer() {
