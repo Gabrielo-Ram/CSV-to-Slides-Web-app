@@ -16,6 +16,9 @@ if (!frontendURL) {
   throw new Error("Could not retrieve frontend URL from environment");
 }
 
+//TESTING:
+console.error(`FrontendURL: ${frontendURL}`);
+
 const router = express.Router();
 
 router.get(
@@ -52,7 +55,11 @@ router.get("/auth/google/callback", (req, res, next) => {
         req.session.accessToken = accessToken;
 
         //TESTING:
-        console.error("Authenticated New User at callback");
+        console.error(
+          `Authenticated New User at callback with token: ${accessToken.slice(
+            15
+          )}`
+        );
 
         //console.error(`Session: ${JSON.stringify(req.session)}`);
 

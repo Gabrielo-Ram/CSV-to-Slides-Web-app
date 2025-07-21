@@ -26,6 +26,9 @@ const app = express();
 //A reference to our MCP Client
 export let mcpClient: MCPClient | null = null;
 
+//Lets express trust the Render proxy
+app.set("trust proxy", 1);
+
 //CORS config to enable frontend
 app.use(
   cors({
