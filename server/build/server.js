@@ -20,6 +20,8 @@ const port = 3001;
 const app = express();
 //A reference to our MCP Client
 export let mcpClient = null;
+//Lets express trust the Render proxy
+app.set("trust proxy", 1);
 //CORS config to enable frontend
 app.use(cors({
     origin: frontendURL,
@@ -32,9 +34,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === "production" || false,
+        secure: true, //Convert to 'false' if testing locally
         httpOnly: true,
-        sameSite: "lax",
+        sameSite: "none",
         maxAge: 1000 * 60 * 60 * 1,
     },
 }));

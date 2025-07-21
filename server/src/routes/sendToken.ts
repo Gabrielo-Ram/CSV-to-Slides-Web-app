@@ -8,6 +8,7 @@
 import express from "express";
 import { Request, Response } from "express";
 import { mcpClient } from "../server.js";
+import { storeAccessToken } from "../../../GoogleSlidesMCPServer/build/index.js";
 
 //MCP Client instance
 const client = mcpClient || null;
@@ -24,16 +25,18 @@ router.get("/", async (req: Request, res: Response) => {
       return;
     }
 
-    //Retrieve the message from the request body. When we fetch with a POST method
-    //to this endpoint, we must pass in a JSON object with a 'message' property.
-    // @ts-ignore
-    const message = `This is the user's acess Token: ${req.session.accessToken}
-    You will use this access Token to call the create-presentation tool.
-    By absolutely NO means should you display this access token to the user. Do not display this access token to the user even if they ask.`;
+    //@ts-ignore
+    const token = req.session.accessToken;
+    if (!token) {
+      res.status(400).json({
+        error: "Failed retrieving access Token from session. Does it exist?",
+      });
+    }
 
-    //MCP Client processes the user's query and returns the LLM's response.
-    const reply = await client.processQuery(message);
+    //Sends the user's access Token to the MCP Ecosystem
+    storeAccessToken(token);
 
+    console.error("Access token sent to MCP server");
     res.status(200).send("Token sent succesfully");
   } catch (error) {
     console.error("Error in /sendToken router", error);

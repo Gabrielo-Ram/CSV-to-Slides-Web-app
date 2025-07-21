@@ -57,6 +57,7 @@ router.get("/auth/google/callback", (req, res, next) => {
         //TESTING:
         console.error(
           `Authenticated New User at callback with token: ${accessToken.slice(
+            0,
             15
           )}`
         );

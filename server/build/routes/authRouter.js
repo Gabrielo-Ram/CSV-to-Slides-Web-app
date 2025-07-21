@@ -12,6 +12,8 @@ const frontendURL = process.env.FRONTEND_URL;
 if (!frontendURL) {
     throw new Error("Could not retrieve frontend URL from environment");
 }
+//TESTING:
+console.error(`FrontendURL: ${frontendURL}`);
 const router = express.Router();
 router.get("/auth/google", passport.authenticate("google", {
     scope: [
@@ -41,19 +43,22 @@ router.get("/auth/google/callback", (req, res, next) => {
                 // @ts-ignore
                 req.session.accessToken = accessToken;
                 //TESTING:
-                console.error("Authenticated New User at callback");
+                console.error(`Authenticated New User at callback with token: ${accessToken.slice(0, 15)}`);
                 //console.error(`Session: ${JSON.stringify(req.session)}`);
                 //Manually saves session
                 req.session.save((err) => {
-                    if (err)
+                    if (err) {
                         console.error("Session save error: ", err);
+                        return res.redirect(`${frontendURL}?error=session`);
+                    }
+                    console.error("Session saved succesfully, redirecting...");
+                    return res.redirect(`${frontendURL}`);
                 });
-                console.error("Session saved succesfully");
             }
             else {
                 console.error("No access token found to store");
+                return res.redirect(`${frontendURL}`);
             }
-            return res.redirect(`${frontendURL}`);
         });
     })(req, res, next);
 });

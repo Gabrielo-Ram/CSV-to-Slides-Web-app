@@ -9,6 +9,11 @@ import { z } from "zod";
 import process from "process";
 import { createSlidesForUser } from "./createPresentation.js";
 import { addCustomSlide } from "./addSlides.js";
+//A variable and a global setter function to set the user's access token
+let usersAccessToken = "";
+export async function storeAccessToken(accessToken) {
+    usersAccessToken = accessToken;
+}
 // Create server instance
 const server = new McpServer({
     name: "Gabe's Google Slides MCP",
@@ -119,7 +124,6 @@ This tool creates ONE presentation. The user can only create one presentation at
 
 This tool's paramaters are the following: 
 - companyName: the title of the presentation you want to create (usually the name of the company).
-- accessToken: The user's access token. If you do not have this access token, DO NOT prompt the user for it. Simply ask the user to sign-in through Google. Ensure this parameter is a string.
 
 This tool will return a string representing the presentationId for the created presentation.
 This value will be important if the user decides to add a custom slide using
@@ -129,16 +133,13 @@ server.tool("create-presentation", createPresentationToolDescription, {
     companyName: z
         .string()
         .describe("The name of the company, and therefore the title of the newly created slide"),
-    accessToken: z
-        .string()
-        .describe("The user's access token. If you do not have this access token, DO NOT prompt the user for it."),
-}, async ({ companyName, accessToken }) => {
+}, async ({ companyName }) => {
     //Validates input
     if (!companyName) {
         throw new Error("Missing or invalid input data for create-presentation");
     }
     try {
-        const presentationId = await createSlidesForUser(companyName, accessToken);
+        const presentationId = await createSlidesForUser(companyName, usersAccessToken);
         return {
             content: [
                 {
@@ -216,6 +217,31 @@ server.tool("add-custom-slide", addCustomSlideToolDescription, {
             ],
         };
     }
+});
+server.tool("set-access-token", "This tool stores the user's access Token for future use", {
+    accessToken: z
+        .string()
+        .describe("The user's access Token for Google oAuth"),
+}, async ({ accessToken }) => {
+    if (!accessToken || accessToken.length < 1) {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: "Access Token is empty or invalid. Please pass in a valid access Token",
+                },
+            ],
+        };
+    }
+    usersAccessToken = accessToken;
+    return {
+        content: [
+            {
+                type: "text",
+                text: "Succesfully retrieved the user's access Token",
+            },
+        ],
+    };
 });
 //Main function used to connect to an MCP Client.
 export async function engageServer() {
