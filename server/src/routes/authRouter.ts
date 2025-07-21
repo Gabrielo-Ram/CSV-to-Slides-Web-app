@@ -58,14 +58,18 @@ router.get("/auth/google/callback", (req, res, next) => {
 
         //Manually saves session
         req.session.save((err) => {
-          if (err) console.error("Session save error: ", err);
+          if (err) {
+            console.error("Session save error: ", err);
+            return res.redirect(`${frontendURL}?error=session`);
+          }
+
+          console.error("Session saved succesfully, redirecting...");
+          return res.redirect(`${frontendURL}`);
         });
-        console.error("Session saved succesfully");
       } else {
         console.error("No access token found to store");
+        return res.redirect(`${frontendURL}`);
       }
-
-      return res.redirect(`${frontendURL}`);
     });
   })(req, res, next);
 });
