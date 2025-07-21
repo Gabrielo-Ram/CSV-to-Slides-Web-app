@@ -138,8 +138,6 @@ server.tool("create-presentation", createPresentationToolDescription, {
     if (!companyName) {
         throw new Error("Missing or invalid input data for create-presentation");
     }
-    //TESTING:
-    console.error(`Access token in MCP Server: ${usersAccessToken}`);
     try {
         const presentationId = await createSlidesForUser(companyName, usersAccessToken);
         return {
