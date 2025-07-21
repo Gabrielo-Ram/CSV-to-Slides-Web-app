@@ -13,6 +13,7 @@ if (process.env.NODE_ENV !== "production") {
 
 const BACKEND_URL = process.env.BACKEND_URL;
 if (!BACKEND_URL) {
+  console.error("BACKEND_URL not set");
   throw new Error("Backend URL not set");
 }
 
@@ -25,14 +26,19 @@ passport.use(
       callbackURL: `${BACKEND_URL}/auth/google/callback`,
     },
     (accessToken, refreshToken, profile, done) => {
+      accessToken
+        ? console.error("Succesfully created access token")
+        : console.error("Access Token is undefined");
+
       const user = { profile, accessToken };
+
       return done(null, user);
     }
   )
 );
 
 passport.serializeUser((user, done) => {
-  done(null, user); //Store entire user object in session
+  done(null, user);
 });
 
 passport.deserializeUser((user, done) => {

@@ -40,7 +40,15 @@ router.get("/auth/google/callback", (req, res, next) => {
             if (accessToken) {
                 // @ts-ignore
                 req.session.accessToken = accessToken;
-                console.error("Authenticated New User: ");
+                //TESTING:
+                console.error("Authenticated New User at callback");
+                //console.error(`Session: ${JSON.stringify(req.session)}`);
+                //Manually saves session
+                req.session.save((err) => {
+                    if (err)
+                        console.error("Session save error: ", err);
+                });
+                console.error("Session saved succesfully");
             }
             else {
                 console.error("No access token found to store");

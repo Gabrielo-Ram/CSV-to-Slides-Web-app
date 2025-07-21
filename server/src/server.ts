@@ -42,7 +42,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production" || false,
+      secure: true, //Convert to 'false' if testing locally
       httpOnly: true,
       sameSite: "none",
       maxAge: 1000 * 60 * 60 * 1,
@@ -83,7 +83,7 @@ const startServer = async () => {
 
       //Starts server at port
       app.listen(port, () => {
-        console.error(`\nServer started at port: ${port}`);
+        console.error(`\nServer started at port: ${port} \n`);
       });
     }
   } catch (error) {
@@ -96,14 +96,8 @@ startServer();
 //Checks if the user is signed-in or not.
 app.get("/api/auth/user", (req: any, res: any) => {
   try {
-    //TESTING
-    //console.log("User: ", req.user);
-
     if (req.isAuthenticated() && req.user) {
       res.status(200).send("User authenticated!");
-    } else {
-      console.error("User not authenticated");
-      res.status(401).send("Not authenticated");
     }
   } catch (error) {
     console.error("Error in /api/auth/user:", error);

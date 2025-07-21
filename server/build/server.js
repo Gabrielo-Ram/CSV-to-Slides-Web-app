@@ -34,7 +34,7 @@ app.use(session({
     cookie: {
         secure: process.env.NODE_ENV === "production" || false,
         httpOnly: true,
-        sameSite: "none",
+        sameSite: "lax",
         maxAge: 1000 * 60 * 60 * 1,
     },
 }));
@@ -62,7 +62,7 @@ const startServer = async () => {
             app.use("/", authRouter);
             //Starts server at port
             app.listen(port, () => {
-                console.error(`\nServer started at port: ${port}`);
+                console.error(`\nServer started at port: ${port} \n`);
             });
         }
     }
@@ -74,14 +74,8 @@ startServer();
 //Checks if the user is signed-in or not.
 app.get("/api/auth/user", (req, res) => {
     try {
-        //TESTING
-        //console.log("User: ", req.user);
         if (req.isAuthenticated() && req.user) {
             res.status(200).send("User authenticated!");
-        }
-        else {
-            console.error("User not authenticated");
-            res.status(401).send("Not authenticated");
         }
     }
     catch (error) {
