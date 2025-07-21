@@ -102,6 +102,18 @@ export class MCPClient {
             return `There was an error in processQuery():\n${error}`;
         }
     }
+    //Manually calls a server tool
+    async manualToolCall(nameTool, args) {
+        try {
+            const result = await this.clients[0].callTool({
+                name: nameTool,
+                arguments: args,
+            });
+        }
+        catch (error) {
+            throw new Error(`Error making a manual tool call: ${error}`);
+        }
+    }
     /**
      * [Deprecated] This function creates a CLI interface that allows the user to
      * keep a conversing with the LLM.

@@ -6,7 +6,6 @@
  */
 import express from "express";
 import { mcpClient } from "../server.js";
-import { storeAccessToken } from "../../../GoogleSlidesMCPServer/build/index.js";
 //MCP Client instance
 const client = mcpClient || null;
 const router = express.Router();
@@ -26,8 +25,9 @@ router.get("/", async (req, res) => {
                 error: "Failed retrieving access Token from session. Does it exist?",
             });
         }
-        //Sends the user's access Token to the MCP Ecosystem
-        storeAccessToken(token);
+        const result = client.manualToolCall("set-access-token", {
+            accessToken: token,
+        });
         console.error("Access token sent to MCP server");
         res.status(200).send("Token sent succesfully");
     }

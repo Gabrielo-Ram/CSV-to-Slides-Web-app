@@ -11,6 +11,7 @@ export declare class MCPClient {
      * @param {string} query The user query
      */
     processQuery(query: string): Promise<string | undefined>;
+    manualToolCall(nameTool: string, args: Record<string, any>): Promise<void>;
     /**
      * [Deprecated] This function creates a CLI interface that allows the user to
      * keep a conversing with the LLM.

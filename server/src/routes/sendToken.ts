@@ -27,14 +27,16 @@ router.get("/", async (req: Request, res: Response) => {
 
     //@ts-ignore
     const token = req.session.accessToken;
+
     if (!token) {
       res.status(400).json({
         error: "Failed retrieving access Token from session. Does it exist?",
       });
     }
 
-    //Sends the user's access Token to the MCP Ecosystem
-    storeAccessToken(token);
+    const result = client.manualToolCall("set-access-token", {
+      accessToken: token,
+    });
 
     console.error("Access token sent to MCP server");
     res.status(200).send("Token sent succesfully");

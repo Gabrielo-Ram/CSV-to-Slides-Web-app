@@ -10,8 +10,8 @@ import process from "process";
 import { createSlidesForUser } from "./createPresentation.js";
 import { addCustomSlide } from "./addSlides.js";
 //A variable and a global setter function to set the user's access token
-let usersAccessToken = "";
-export async function storeAccessToken(accessToken) {
+let usersAccessToken;
+export function storeAccessToken(accessToken) {
     usersAccessToken = accessToken;
 }
 // Create server instance
@@ -138,6 +138,8 @@ server.tool("create-presentation", createPresentationToolDescription, {
     if (!companyName) {
         throw new Error("Missing or invalid input data for create-presentation");
     }
+    //TESTING:
+    console.error(`Access token in MCP Server: ${usersAccessToken}`);
     try {
         const presentationId = await createSlidesForUser(companyName, usersAccessToken);
         return {
@@ -218,6 +220,7 @@ server.tool("add-custom-slide", addCustomSlideToolDescription, {
         };
     }
 });
+//A tool that I call manually in my express backend to set the user's access token
 server.tool("set-access-token", "This tool stores the user's access Token for future use", {
     accessToken: z
         .string()
@@ -233,7 +236,7 @@ server.tool("set-access-token", "This tool stores the user's access Token for fu
             ],
         };
     }
-    usersAccessToken = accessToken;
+    storeAccessToken(accessToken);
     return {
         content: [
             {

@@ -45,9 +45,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true, //Convert to 'false' if testing locally
+      secure: true, //Convert to 'false' if testing locally; 'true' if production
       httpOnly: true,
-      sameSite: "none",
+      sameSite: "none", //Change to "none" on production
       maxAge: 1000 * 60 * 60 * 1,
     },
   })
