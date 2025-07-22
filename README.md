@@ -51,8 +51,7 @@ npm start `
 
 4. Usage
 
-- Visit `http://localhost:5173` to use the app.
-- Authenticate with Google, upload your CSV or PDF, and generate a pitch deck.
+- Your local instance will run at: `http://localhost:3001`
 
 ## License
 
@@ -61,4 +60,4 @@ MIT
 ---
 
 This app is live at this link:
-[ Insert Link ]
+https://pitch-deck-generator-frontend.onrender.com
