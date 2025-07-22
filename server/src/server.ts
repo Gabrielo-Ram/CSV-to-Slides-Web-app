@@ -45,9 +45,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true, //Convert to 'false' if testing locally; 'true' if production
+      secure: false, //Convert to 'false' if testing locally; 'true' if production
       httpOnly: true,
-      sameSite: "none", //Change to "none" on production
+      sameSite: "lax", //"lax" if testing locally; "none" if production
       maxAge: 1000 * 60 * 60 * 1,
     },
   })
@@ -100,7 +100,9 @@ startServer();
 app.get("/api/auth/user", (req: any, res: any) => {
   try {
     if (req.isAuthenticated() && req.user) {
-      res.status(200).send("User authenticated!");
+      return res.status(200).send("User authenticated!");
+    } else {
+      return res.status(401).send("Not authenticated");
     }
   } catch (error) {
     console.error("Error in /api/auth/user:", error);
