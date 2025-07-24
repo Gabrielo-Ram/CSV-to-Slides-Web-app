@@ -23,7 +23,6 @@ const server = new McpServer({
         tools: {},
     },
 });
-//Creates an
 /**
  * A server tool that validates raw JSON input from the LLM. This tool is
  * subject to change depending on where we are reading in data from
@@ -166,17 +165,19 @@ const addCustomSlideToolDescription = `This tool allows you to create a custom s
 The user can create a maximum of 10 custom slides at at time. The content and styling of custom slide is entirely up to your discretion.
 
 This tool's parameters are the following: 
-- The title for this new slide you create. This title is simple, clear, and to-the-point. For example, the title for a slide on a companie's team should be, "Why us? Meet the team". No more than 2-4 words. 
-- Text content you compose based on the user's request. Use the user's uploaded files or text context to create your wireframe. If the user uploads a CSV file, use the extract-data tool before creating a slide. If the user uploads a PDF you do not use the extract-data tool. If they provide text context you do not need to use the extract-data tool. If you feel you need additional information to complete your obejctive, prompt the user. If you decide the content of a slide should be written using bullet-points, you designate each bullet point by adding a new line between each new idea. You are encouraged to give image suggestions in your slide content.Seperate your image suggestions from your regular text content with a new line. 
+- The title for this new slide you create. This title is simple, clear, and to-the-point. You are encouraged to use these sample titles: "The Problem", "The Solution", "The Market", "Traction", "Why Us (Team)", "The Ask".
+- Text content you compose based on the user's request. Use the user's uploaded files or text context to create your wireframe. If the user uploads a CSV file, use the extract-data tool before creating a slide. If the user uploads a PDF you do not use the extract-data tool. If they provide text context you do not need to use the extract-data tool. If you feel you need additional information to complete your obejctive, prompt the user. If you decide the content of a slide should be written using bullet-points, you designate each bullet point by adding a new line between each new idea. You are encouraged to give image suggestions in your slide content.
 - The presentationID for the most recent, or most appropriate, presentation you've created. This is a string value.
 - A string value that one the following: "Paragraph" or "Bullet". The user may or may not specify what slide type they want to create. If they do not, always create a "Bullet" slide.
 
 You DO NOT NEED to create a new presentation when you run this tool. Simply retrieve the presentationID that was returned when you ran the create-presentation tool.`;
 server.tool("add-custom-slide", addCustomSlideToolDescription, {
-    slideTitle: z.string().describe("Your title for this custom-made slide"),
+    slideTitle: z
+        .string()
+        .describe("Your title for this custom-made slide. This title should be no more than 4-5 words in length."),
     slideContent: z
         .string()
-        .describe("The content made specifically for this slide by the LLM."),
+        .describe("The body text-content for this slide. If you are creating a Bullet-slide, each new idea should be seperated by a new line."),
     presentationId: z
         .string()
         .describe("The presentationID for the most recently created Google Slides presentation."),

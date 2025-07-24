@@ -1,0 +1,13 @@
+{
+  "folders": [
+	{
+		"path": "../.."
+	},
+	{
+		"path": "../../../Pitch-Deck-Generator-Frontend"
+	}
+],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "CSV-to-Slides-Web-app"
+  }
+}
