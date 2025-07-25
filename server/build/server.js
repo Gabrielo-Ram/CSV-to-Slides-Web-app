@@ -27,17 +27,22 @@ app.use(cors({
     origin: frontendURL,
     credentials: true,
 }));
+//Throw error if session secret is not provided
+const sessionSecret = process.env.SESSION_SECRET;
+if (!sessionSecret) {
+    throw new Error("Could not retrieve SESSION_SECRET from environment");
+}
 //Express-session 'cookie' config
 app.use(session({
     name: "connect.sid",
-    secret: process.env.SESSION_SECRET || "my-secret",
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: true, //Convert to 'false' if testing locally; 'true' if production
+        secure: process.env.NODE_ENV === "production",
         httpOnly: true,
-        sameSite: "none", //"lax" if testing locally; "none" if production
-        maxAge: 1000 * 60 * 60 * 1,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        maxAge: 1000 * 60 * 60 * 1, // 1 hour
     },
 }));
 app.use(passport.initialize());
@@ -76,16 +81,23 @@ startServer();
 //Checks if the user is signed-in or not.
 app.get("/api/auth/user", (req, res) => {
     try {
-        if (req.isAuthenticated() && req.user) {
-            return res.status(200).send("User authenticated!");
+        //Check for session
+        if (!req.session) {
+            return res
+                .status(401)
+                .send("Session is missing. User is not authenticated.");
         }
-        else {
-            return res.status(401).send("Not authenticated");
+        //Check for access token
+        if (!req.session.accessToken) {
+            return res
+                .status(401)
+                .send("Access token not found in session. Log in may have failed");
         }
+        return res.status(200).send("User is authenticated");
     }
     catch (error) {
-        console.error("Error in /api/auth/user:", error);
-        res.status(401).send("Fatal error at /api/auth/user");
+        console.error("Fatal error in /api/auth/user: ", error);
+        return res.status(500).send("Internal server error in /api/auth/user");
     }
 });
 //TESTING:
