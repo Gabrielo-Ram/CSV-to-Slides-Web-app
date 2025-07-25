@@ -37,7 +37,7 @@ app.use(
   })
 );
 
-//Express-session config
+//Express-session 'cookie' config
 app.use(
   session({
     name: "connect.sid",
